@@ -2,19 +2,19 @@ const { response } = require('express');
 var request = require('request');
 
 const apiOptions = {
-  server: 'http://localhost:3000'
+  server:
+    process.env.NODE_ENV === "production"
+      ? "https://loc8r-api-nf91.onrender.com"
+      : "http://localhost:3000",
 };
-if(process.env.NODE_ENV === 'production') {
-  apiOptions.server = 'https://yourapi.com';
-}
 
 const requestOptions = {
-  url: `${apiOptions.server}`,
-  method: 'GET',
-  json:{},
+  url: apiOptions.server + "/api/locations",
+  method: "GET",
+  json: {},
   qs: {
-    offset: 20
-  }
+    offset: 20,
+  },
 };
 request(requestOptions, (err, response, body) => {
   if (err) {
