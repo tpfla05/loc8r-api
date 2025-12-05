@@ -44,7 +44,7 @@ export class LocationDetailsComponent implements OnInit {
     this.newReview.author = this.getUsername();
     if (this.formIsValid()) {
       console.log(this.newReview);
-      this.loc8rDataService.addReviewByLocationId(this.location._id, this.newReview)
+      this.loc8rDataService.addReviewByLocationId(this.location.id, this.newReview)
         .then((review: Review) => {
           console.log('Review saved', review);
           let reviews = this.location.reviews.slice(0);

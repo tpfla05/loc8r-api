@@ -12,7 +12,7 @@ export class Review {
 }
 
 export class Location {
-  _id!: string;
+  id!: string;
   name!: string;
   distance!: number;
   address!: string;
