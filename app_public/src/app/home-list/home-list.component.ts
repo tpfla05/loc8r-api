@@ -40,6 +40,7 @@ export class HomeListComponent implements OnInit {
     this.loc8rDataService
       .getLocations(lat, lng) 
       .then(foundLocations => {
+        console.log('받아온 locations:', foundLocations);
         this.message = foundLocations.length > 0 ? '' : 'No locations found';
         this.locations = foundLocations;
       });

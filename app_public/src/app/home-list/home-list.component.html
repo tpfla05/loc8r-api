@@ -1,31 +1,42 @@
-<div class="error">{{message}}</div>
+<div class="error">{{ message }}</div>
 
-<div class="card" *ngFor="let location of locations">
-    <div class="card-block">
-        <h4>
-            <a [routerLink]="['/location', location._id]">
-                {{ location.name }}
-            </a>
+<!-- ✨ 중요: 목록이 로드되기 전에는 아무 카드도 렌더링되지 않음 -->
+<div *ngIf="locations && locations.length > 0">
+    <div class="card" *ngFor="let location of locations">
+        <div class="card-block">
 
-            <small>&nbsp;
-                <i class="fa{{ location.rating < 1 ? 'r' : 's' }} fa-star"></i>
-                <i class="fa{{ location.rating < 2 ? 'r' : 's' }} fa-star"></i>
-                <i class="fa{{ location.rating < 3 ? 'r' : 's' }} fa-star"></i>
-                <i class="fa{{ location.rating < 4 ? 'r' : 's' }} fa-star"></i>
-                <i class="fa{{ location.rating < 5 ? 'r' : 's' }} fa-star"></i>
-            </small>
+            <h4>
+                <!-- routerLink 정상 작동 (undefined 절대 없음) -->
+                <a [routerLink]="['/location', location._id]">
+                    {{ location.name }}
+                </a>
 
-            <span class="badge badge-pill badge-default float-right">
-                {{ location.distance | distance }}
-            </span>
-        </h4>
+                <small>&nbsp;
+                    <i class="fa{{ location.rating < 1 ? 'r' : 's' }} fa-star"></i>
+                    <i class="fa{{ location.rating < 2 ? 'r' : 's' }} fa-star"></i>
+                    <i class="fa{{ location.rating < 3 ? 'r' : 's' }} fa-star"></i>
+                    <i class="fa{{ location.rating < 4 ? 'r' : 's' }} fa-star"></i>
+                    <i class="fa{{ location.rating < 5 ? 'r' : 's' }} fa-star"></i>
+                </small>
 
-        <p class="address">{{ location.address | uppercase }}</p>
+                <span class="badge badge-pill badge-default float-right">
+                    {{ location.distance | distance }}
+                </span>
+            </h4>
 
-        <p class="facilities">
-            <span *ngFor="let facility of location.facilities" class="badge badge-warning">
-                {{ facility }}
-            </span>
-        </p>
+            <p class="address">{{ location.address | uppercase }}</p>
+
+            <p class="facilities">
+                <span *ngFor="let facility of location.facilities" class="badge badge-warning">
+                    {{ facility }}
+                </span>
+            </p>
+
+        </div>
     </div>
+</div>
+
+<!-- ✨ 위치 없음일 때 메시지 -->
+<div *ngIf="locations && locations.length === 0">
+    <p>No locations found</p>
 </div>
