@@ -43,12 +43,20 @@ export class LocationDetailsComponent implements OnInit {
     this.formError = '';
     console.log('현재 location 데이터 전체:', this.location);
     this.newReview.author = this.getUsername();
+
     if (this.formIsValid()) {
       console.log(this.newReview);
-      this.loc8rDataService.addReviewByLocationId(this.location.id, this.newReview)
+
+      // [수정된 부분] id가 있으면 쓰고, 없으면 _id를 써라 (안전장치)
+      const locationId = this.location.id || this.location._id;
+
+      // [수정된 부분] locationId! 를 사용하여 확실한 ID를 넘겨줌
+      this.loc8rDataService.addReviewByLocationId(locationId!, this.newReview)
         .then((review: Review) => {
           console.log('Review saved', review);
-          let reviews = this.location.reviews.slice(0);
+          
+          // 리뷰 목록 갱신 (리뷰가 하나도 없을 때를 대비해 안전하게 처리)
+          let reviews = this.location.reviews ? this.location.reviews.slice(0) : [];
           reviews.unshift(review);
           this.location.reviews = reviews;
           this.resetAndHideReviewForm();
