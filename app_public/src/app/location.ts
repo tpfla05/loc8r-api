@@ -12,13 +12,14 @@ export class Review {
 }
 
 export class Location {
-  id!: string;
+  _id?: string; // MongoDB 원본 ID가 올 수도 있고
+  id?: string;  // 변환된 ID가 올 수도 있음
   name!: string;
   distance!: number;
   address!: string;
   rating!: number;
   facilities!: string[];
   reviews!: Review[];
-  coords!: number[];
-  openingTimes!: any[];
+  coords?: number[];
+  openingTimes?: any[];
 }
