@@ -41,6 +41,7 @@ export class LocationDetailsComponent implements OnInit {
 
   public onReviewSubmit(): void {
     this.formError = '';
+    console.log('현재 location 데이터 전체:', this.location);
     this.newReview.author = this.getUsername();
     if (this.formIsValid()) {
       console.log(this.newReview);
