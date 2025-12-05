@@ -54,3 +54,5 @@ process.on("SIGTERM", () => {
 });
 
 require("./locations");
+
+require("./user");
