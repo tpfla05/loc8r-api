@@ -2,7 +2,14 @@ const mongoose = require("mongoose");
 const readline = require("readline");
 mongoose.set("strictQuery", false);
 
-const dbURI = process.env.MONGODB_URI || "mongodb://localhost/Loc8r";
+const dbURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/Loc8r";
+
+// 2. 🔥 [필수] 로그 출력 (이게 제일 중요합니다!) 🔥
+console.log("========================================");
+console.log("▶ process.env.NODE_ENV:", process.env.NODE_ENV);
+console.log("▶ process.env.MONGODB_URI:", process.env.MONGODB_URI);
+console.log("▶ 최종 결정된 dbURI:", dbURI);
+console.log("========================================");
 
 mongoose.connect(dbURI);
 
