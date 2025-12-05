@@ -2,10 +2,7 @@ const { response } = require('express');
 var request = require('request');
 
 const apiOptions = {
-  server:
-    process.env.NODE_ENV === "production"
-      ? "https://loc8r-api24-nf91.onrender.com"
-      : "http://localhost:3000",
+  server: "https://loc8r-api24-9svw.onrender.com",
 };
 
 const requestOptions = {
