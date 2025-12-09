@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Loc8rDataService } from '../loc8r-data.service';
+import { KakaoService } from '../kakao.service';
 import { GeolocationService } from '../geolocation.service';
-
-import { Location } from '../location';
 
 @Component({
   selector: 'app-home-list',
@@ -10,40 +8,75 @@ import { Location } from '../location';
   styleUrls: ['./home-list.component.css']
 })
 export class HomeListComponent implements OnInit {
+  public locations: any[] = [];
+  public message = '';
+
+  public keywords: string[] = ['카페', '음식점', '분식', '치킨', '한식', '편의점'];
+  public searchKeyword: string = this.keywords[0];
+
+  private lat: number = 0;
+  private lng: number = 0;
+
+  public recentKeywords: string[] = [];
 
   constructor(
-    private loc8rDataService: Loc8rDataService,
+    private kakaoService: KakaoService,
     private geolocationService: GeolocationService
   ) {}
 
-  public locations: Location[] = [];
-  public message: string = '';
-
   ngOnInit(): void {
-    this.getPosition();
+    this.getUserLocation();
+    this.loadRecentKeywords();
   }
 
-  private getPosition(): void {
+  private getUserLocation(): void {
     this.message = 'Getting your location...';
-
     this.geolocationService.getPosition(
-      this.getLocations.bind(this),
+      this.setCoordinates.bind(this),
       this.showError.bind(this),
       this.noGeo.bind(this)
     );
   }
 
-  private getLocations(position: any): void {
-    this.message = 'Searching for nearby places';
-    const lat: number = position.coords.latitude;
-    const lng: number = position.coords.longitude;
-    this.loc8rDataService
-      .getLocations(lat, lng) 
-      .then(foundLocations => {
-        console.log('받아온 locations:', foundLocations);
-        this.message = foundLocations.length > 0 ? '' : 'No locations found';
-        this.locations = foundLocations;
+  private setCoordinates(position: any): void {
+    this.lat = position.coords.latitude;
+    this.lng = position.coords.longitude;
+    this.searchCafes();
+  }
+
+  public searchCafes(): void {
+    if (!this.searchKeyword.trim()) {
+      this.message = '검색어를 입력하세요.';
+      return;
+    }
+
+    this.message = `Searching for nearby ${this.searchKeyword}...`;
+
+    this.kakaoService
+      .searchCafes(this.searchKeyword, this.lng, this.lat)
+      .subscribe(res => {
+
+        this.locations = res.documents;
+        this.message =
+          res.documents.length > 0
+            ? ''
+            : `"${this.searchKeyword}" 검색 결과가 없습니다.`;
+
+        this.saveRecentKeyword(this.searchKeyword);
       });
+  }
+
+  private saveRecentKeyword(keyword: string): void {
+    const stored = localStorage.getItem('recentKeywords');
+    let recent = stored ? JSON.parse(stored) : [];
+    recent = [keyword, ...recent.filter((k: string) => k !== keyword)].slice(0, 5);
+    localStorage.setItem('recentKeywords', JSON.stringify(recent));
+    this.recentKeywords = recent;
+  }
+
+  private loadRecentKeywords(): void {
+    const stored = localStorage.getItem('recentKeywords');
+    this.recentKeywords = stored ? JSON.parse(stored) : [];
   }
 
   private showError(error: any): void {

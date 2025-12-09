@@ -1,42 +1,29 @@
-<div class="error">{{ message }}</div>
+<div class="container mt-3">
+  <h2>주변 장소 검색</h2>
+  <div class="input-group mb-3">
+    <select [(ngModel)]="searchKeyword" class="form-select">
+      <option *ngFor="let kw of keywords" [value]="kw">{{ kw }}</option>
+    </select>
+    <button class="btn btn-primary" (click)="searchCafes()">검색</button>
+  </div>
+  <p *ngIf="message">{{ message }}</p>
+  <div *ngIf="locations.length > 0">
+    <div *ngFor="let cafe of locations" class="card mb-2 position-relative">
+      <div class="card-block">
+        <h4>
+          <span class="badge badge-pill badge-default float-end">
+            {{cafe.distance | distance}}
+          </span>
 
-<!-- ✨ 중요: 목록이 로드되기 전에는 아무 카드도 렌더링되지 않음 -->
-<div *ngIf="locations && locations.length > 0">
-    <div class="card" *ngFor="let location of locations">
-        <div class="card-block">
-
-            <h4>
-                <!-- routerLink 정상 작동 (undefined 절대 없음) -->
-                <a [routerLink]="['/location', location.id]">
-                    {{ location.name }}
-                </a>
-
-                <small>&nbsp;
-                    <i class="fa{{ location.rating < 1 ? 'r' : 's' }} fa-star"></i>
-                    <i class="fa{{ location.rating < 2 ? 'r' : 's' }} fa-star"></i>
-                    <i class="fa{{ location.rating < 3 ? 'r' : 's' }} fa-star"></i>
-                    <i class="fa{{ location.rating < 4 ? 'r' : 's' }} fa-star"></i>
-                    <i class="fa{{ location.rating < 5 ? 'r' : 's' }} fa-star"></i>
-                </small>
-
-                <span class="badge badge-pill badge-default float-right">
-                    {{ location.distance | distance }}
-                </span>
-            </h4>
-
-            <p class="address">{{ location.address | uppercase }}</p>
-
-            <p class="facilities">
-                <span *ngFor="let facility of location.facilities" class="badge badge-warning">
-                    {{ facility }}
-                </span>
-            </p>
-
-        </div>
+          <h5 class="card-title mb-1">
+            <a [href]="cafe.place_url" target="_blank">{{ cafe.place_name }}</a>
+          </h5>
+          <p class="card-text small mb-0">
+            <strong>주소:</strong> {{ cafe.road_address_name || cafe.address_name }}<br>
+            <strong>전화번호:</strong> {{ cafe.phone || '없음' }}
+          </p>
+        </h4>
+      </div>
     </div>
-</div>
-
-<!-- ✨ 위치 없음일 때 메시지 -->
-<div *ngIf="locations && locations.length === 0">
-    <p>No locations found</p>
+  </div>
 </div>

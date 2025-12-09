@@ -20,6 +20,6 @@ export class Location {
   rating!: number;
   facilities!: string[];
   reviews!: Review[];
-  coords?: number[];
+  coords!: number[];
   openingTimes?: any[];
 }
